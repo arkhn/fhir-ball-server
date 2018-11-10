@@ -9,7 +9,7 @@ This is a RESTful API to serve data to the client.
 
 ### Store
 
-Requests should be sent to: `[ur]/store`
+Requests should be sent to `[ur]/store`.
 The body of your request must match the following template:
 
 ```
@@ -21,7 +21,7 @@ The body of your request must match the following template:
 
 ### Mapping
 
-Requests should be sent to: `[url]/mapping`
+Requests should be sent to `[url]/mapping`.
 The body of your request must match the following template:
 ```
 {
