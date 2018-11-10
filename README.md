@@ -1,4 +1,7 @@
-# API
+[![GitHub license](https://img.shields.io/github/license/arkhn/fhir-pipe.svg)](https://github.com/arkhn/fhir-pipe/blob/master/LICENSE)
+[![Website arkhn.org](https://img.shields.io/website-up-down-green-red/https/arkhn.org.svg)](http://arkhn.org/)
+
+# Fhirball Server
 
 This is a RESTful API to serve data to the client.
 
