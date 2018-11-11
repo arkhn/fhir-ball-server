@@ -1,1 +1,1 @@
-from .resources import Mapping, Store
+from .resources import Mapping, Schema, Schemas, Store
