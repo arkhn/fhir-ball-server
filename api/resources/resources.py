@@ -24,10 +24,11 @@ class Mapping(Resource):
         args = parser.args()
 
         file_path = fhir_resource_path(args['fhir_resource_name'], parent_folder=args['database'])
+
         if not file_path:
-            return jsonify(
-                {"message": "Fhir resource not found."}
-            )
+            return jsonify({
+                "message": "Fhir resource not found.",
+            })
 
         folder = os.path.dirname(file_path)
         file = os.path.basename(file_path)
@@ -36,6 +37,10 @@ class Mapping(Resource):
             return jsonify(yaml.load(open(file_path)))
         elif args['output_format'] == 'yml':
             return send_from_directory(folder, file)
+
+        return jsonify({
+            'message': 'Extension not found.'
+        })
 
 
 class Schemas(Resource):
@@ -82,15 +87,20 @@ class Store(Resource):
         args = parser.parse_args()
 
         file_path = fhir_resource_path(args['fhir_resource_name'], parent_folder=args['output_format'])
+
         if not file_path:
-            return jsonify(
-                {"message": "Fhir resource not found."}
-            )
+            return jsonify({
+                "message": "Fhir resource not found."
+            })
 
         folder = os.path.dirname(file_path)
         file = os.path.basename(file_path)
+
         if args['output_format'] == 'json':
             return jsonify(yaml.load(open(file_path)))
-
         elif args['output_format'] == 'yml':
             return send_from_directory(folder, file)
+
+        return jsonify({
+            'message': 'Extension not found.',
+        })
