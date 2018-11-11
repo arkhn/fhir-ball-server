@@ -5,6 +5,8 @@ from flask import jsonify, send_from_directory
 from flask_restful import Resource, reqparse
 import os
 import yaml
+import requests
+import json
 
 from api.common.utils import fhir_resource_path
 
@@ -57,3 +59,12 @@ class Mapping(Resource):
 
         elif args['output_format'] == 'yml':
             return send_from_directory(folder, file)
+
+
+class Schemas(Resource):
+    def get(self, database_name, extension):
+        content = requests.get('http://127.0.0.1:8421/{}.{}'.format(
+            database_name, extension
+        )).content
+        return jsonify((json.loads(content)))
+
