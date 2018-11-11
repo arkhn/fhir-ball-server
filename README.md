@@ -3,7 +3,7 @@
 
 # Fhirball Server
 
-This is a RESTful API to serve data to the client.
+This is a RESTful API to serve data to the client. It is mainly routes requests to back-ends running on the same machine which respectively contain and serve all needed data.
 
 ## Installation
 
@@ -20,6 +20,13 @@ Otherwise, run:
 ```
 python3 ./server.py
 ```
+
+## Available resources
+
+### Schemas
+
+* `[url]/schemas` returns a CSV list of available database schemas.
+* `[url]/schema/<database_name>/<extension>` returns a file containing the schema of a given database.
 
 ### Store
 
