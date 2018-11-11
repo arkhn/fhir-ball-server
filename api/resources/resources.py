@@ -41,7 +41,7 @@ class Mapping(Resource):
         parser.add_argument('fhir_resource_name', required=True, type=str)
         parser.add_argument('database', required=True, type=str)
 
-        args = parser.args()
+        args = parser.parse_args()
 
         file_path = fhir_resource_path(args['fhir_resource_name'], parent_folder=args['database'])
         if not file_path:
