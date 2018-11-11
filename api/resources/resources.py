@@ -40,15 +40,11 @@ class Schemas(Resource):
     def get(self):
         '''Returns CSV list of available database schemas.'''
 
-        content = requests.get('{}/databases.csv'.format(
+        content = requests.get('{}/databases.json'.format(
             SCHEMA_URL
         )).content.decode(ENCODING)
 
-        response = make_response(content)
-        response.headers['Content-Disposition'] = 'attachment; filename=databases.csv'
-        response.mimetype = 'text/csv'
-
-        return response
+        return jsonify(json.loads(content))
 
 
 class Schema(Resource):
