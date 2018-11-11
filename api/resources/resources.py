@@ -8,35 +8,27 @@ import os
 import requests
 import yaml
 
-from api.common.utils import fhir_resource_path
 
-
-SCHEMA_URL = 'http://127.0.0.1:8421'
+MAPPING_URL = 'http://127.0.0.1:8421'
+SCHEMA_URL = 'http://127.0.0.1:8422'
+STORE_URL = 'http://127.0.0.1:8423'
 
 
 class Mapping(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('output_format', required=True, type=str, choices=('json', 'yml'))
-        parser.add_argument('fhir_resource_name', required=True, type=str)
-        parser.add_argument('database', required=True, type=str)
+    def get(self, database_name, resource_name, extension):
+        '''Fetches distant file and parses it according to its extension.'''
 
-        args = parser.args()
+        content = requests.get('{}/{}/{}.{}'.format(
+            MAPPING_URL,
+            database_name,
+            resource_name,
+            extension
+        )).content
 
-        file_path = fhir_resource_path(args['fhir_resource_name'], parent_folder=args['database'])
-
-        if not file_path:
-            return jsonify({
-                "message": "Fhir resource not found.",
-            })
-
-        folder = os.path.dirname(file_path)
-        file = os.path.basename(file_path)
-
-        if args['output_format'] == 'json':
-            return jsonify(yaml.load(open(file_path)))
-        elif args['output_format'] == 'yml':
-            return send_from_directory(folder, file)
+        if extension == 'json':
+            return jsonify(json.loads(content))
+        elif extension == 'yml':
+            return jsonify(yaml.load(content))
 
         return jsonify({
             'message': 'Extension not found.'
@@ -79,28 +71,18 @@ class Schema(Resource):
 
 
 class Store(Resource):
-    def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('output_format', required=True, type=str, choices=('json', 'yml'))
-        parser.add_argument('fhir_resource_name', required=True, type=str)
+    def get(self, resource_name):
+        content = requests.get('{}/{}.{}'.format(
+            STORE_URL,
+            resource_name,
+            extension
+        )).content
 
-        args = parser.parse_args()
-
-        file_path = fhir_resource_path(args['fhir_resource_name'], parent_folder=args['output_format'])
-
-        if not file_path:
-            return jsonify({
-                "message": "Fhir resource not found."
-            })
-
-        folder = os.path.dirname(file_path)
-        file = os.path.basename(file_path)
-
-        if args['output_format'] == 'json':
-            return jsonify(yaml.load(open(file_path)))
-        elif args['output_format'] == 'yml':
-            return send_from_directory(folder, file)
+        if extension == 'json':
+            return jsonify(json.loads(content))
+        elif extension == 'yml':
+            return jsonify(yaml.load(content))
 
         return jsonify({
-            'message': 'Extension not found.',
+            'message': 'Extension not found.'
         })
