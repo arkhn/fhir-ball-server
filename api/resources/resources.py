@@ -11,9 +11,11 @@ import yaml
 from api.common.utils import fhir_resource_path
 
 
+SCHEMA_URL = 'http://127.0.0.1:8421'
+
+
 class Mapping(Resource):
     def post(self):
-
         parser = reqparse.RequestParser()
         parser.add_argument('output_format', required=True, type=str, choices=('json', 'yml'))
         parser.add_argument('fhir_resource_name', required=True, type=str)
@@ -32,63 +34,31 @@ class Mapping(Resource):
 
         if args['output_format'] == 'json':
             return jsonify(yaml.load(open(file_path)))
-
         elif args['output_format'] == 'yml':
             return send_from_directory(folder, file)
 
 
 class Schemas(Resource):
-    '''
-    Restful API dealing with databases schemas.
-    '''
-
-    def __init__(self):
-        '''
-        Inits instance parameters.
-        '''
-
-        self.url = 'http://127.0.0.1:8421'
-
-    def get(self, **kwargs):
-        '''
-        Calls resource's method depending on the number
-        of arguemnts.
-        '''
-
-        if len(kwargs) == 0:
-            return self.get_list()
-        elif len(kwargs) == 2:
-            return self.get_schema(**kwargs)
-
-        return jsonify({
-            'message': 'Invalid number of arguments',
-        })
-
-    def get_list(self):
-        '''
-        Fetches CSV from distant source and builds
-        a flask response.
-        '''
+    def get(self):
+        '''Returns CSV list of available database schemas.'''
 
         content = requests.get('{}/databases.csv'.format(
-            self.url
+            SCHEMA_URL
         )).content
 
         response = make_response(content)
-        cd = 'attachment; filename=databases.csv'
-        response.headers['Content-Disposition'] = cd
+        response.headers['Content-Disposition'] = 'attachment; filename=databases.csv'
         response.mimetype = 'text/csv'
 
         return response
 
-    def get_schema(self, database_name, extension):
-        '''
-        Fetches distant file and parses it according
-        to its extension.
-        '''
+
+class Schema(Resource):
+    def get(self, database_name, extension):
+        '''Fetches distant file and parses it according to its extension.'''
 
         content = requests.get('{}/{}.{}'.format(
-            self.url,
+            SCHEMA_URL,
             database_name,
             extension
         )).content
@@ -105,7 +75,6 @@ class Schemas(Resource):
 
 class Store(Resource):
     def post(self):
-
         parser = reqparse.RequestParser()
         parser.add_argument('output_format', required=True, type=str, choices=('json', 'yml'))
         parser.add_argument('fhir_resource_name', required=True, type=str)
