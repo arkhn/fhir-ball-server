@@ -9,6 +9,7 @@ import requests
 import yaml
 
 
+ENCODING = 'utf-8'
 MAPPING_URL = 'http://127.0.0.1:8421'
 SCHEMA_URL = 'http://127.0.0.1:8422'
 STORE_URL = 'http://127.0.0.1:8423'
@@ -23,7 +24,7 @@ class Mapping(Resource):
             database_name,
             resource_name,
             extension
-        )).content
+        )).content.decode(ENCODING)
 
         if extension == 'json':
             return jsonify(json.loads(content))
@@ -41,7 +42,7 @@ class Schemas(Resource):
 
         content = requests.get('{}/databases.csv'.format(
             SCHEMA_URL
-        )).content
+        )).content.decode(ENCODING)
 
         response = make_response(content)
         response.headers['Content-Disposition'] = 'attachment; filename=databases.csv'
@@ -58,9 +59,10 @@ class Schema(Resource):
             SCHEMA_URL,
             database_name,
             extension
-        )).content
+        )).content.decode(ENCODING)
 
         if extension == 'json':
+            # return jsonify(json.loads(content))
             return jsonify(json.loads(content))
         elif extension == 'yml':
             return jsonify(yaml.load(content))
@@ -76,7 +78,7 @@ class Store(Resource):
             STORE_URL,
             resource_name,
             extension
-        )).content
+        )).content.decode(ENCODING)
 
         if extension == 'json':
             return jsonify(json.loads(content))
