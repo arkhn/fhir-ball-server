@@ -5,7 +5,17 @@
 
 This is a RESTful API to serve data to the client.
 
+## Installation
+
+Python modules should be installed first: `pip install requirements.txt`.
+
+
 ## Usage
+
+In order to start the server, run the following command:
+```
+python3 ./server.py
+```
 
 ### Store
 
