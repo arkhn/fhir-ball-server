@@ -1,1 +1,1 @@
-from .resources import FhirDatatype, FhirDatatypes, FhirResource, FhirResources, Schema, Schemas
+from .resources import FhirDatatypes, FhirResource, FhirResources, Schema, Schemas

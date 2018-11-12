@@ -14,21 +14,8 @@ class FhirDatatypes(Resource):
     def get():
         """Returns CSV list of available database schemas."""
 
-        content = requests.get('{}/datatypes_list.json'.format(
+        content = requests.get('{}/datatypes.json'.format(
             STORE_URL
-        )).content.decode(ENCODING)
-
-        return file_response(content, 'json')
-
-
-class FhirDatatype(Resource):
-    @staticmethod
-    def get(resource_name):
-        """Returns CSV list of available database schemas."""
-
-        content = requests.get('{}/datatypes/{}.json'.format(
-            STORE_URL,
-            resource_name
         )).content.decode(ENCODING)
 
         return file_response(content, 'json')
