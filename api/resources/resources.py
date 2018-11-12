@@ -1,12 +1,7 @@
-from flask import jsonify, make_response, send_from_directory
-# note: prefer send_from_directory to send_file  as send_file is not secured.
-# From the official documentation : "Please never pass filenames to this function from user sources;
-# you should use send_from_directory() instead."
-from flask_restful import Resource, reqparse
-import json
-import os
+from flask_restful import Resource
 import requests
-import yaml
+
+from api.common.utils import file_response
 
 
 ENCODING = 'utf-8'
@@ -16,8 +11,9 @@ STORE_URL = 'http://127.0.0.1:8423'
 
 
 class Mapping(Resource):
-    def get(self, database_name, resource_name, extension):
-        '''Fetches distant file and parses it according to its extension.'''
+    @staticmethod
+    def get(database_name, resource_name, extension):
+        """Fetches distant file from Mapping and parses it according to its extension."""
 
         content = requests.get('{}/{}/{}.{}'.format(
             MAPPING_URL,
@@ -26,30 +22,25 @@ class Mapping(Resource):
             extension
         )).content.decode(ENCODING)
 
-        if extension == 'json':
-            return jsonify(json.loads(content))
-        elif extension == 'yml':
-            return jsonify(yaml.load(content))
-
-        return jsonify({
-            'message': 'Extension not found.'
-        })
+        return file_response(content, extension)
 
 
 class Schemas(Resource):
-    def get(self):
-        '''Returns CSV list of available database schemas.'''
+    @staticmethod
+    def get():
+        """Returns CSV list of available database schemas."""
 
         content = requests.get('{}/databases.json'.format(
             SCHEMA_URL
         )).content.decode(ENCODING)
 
-        return jsonify(json.loads(content))
+        return file_response(content, 'json')
 
 
 class Schema(Resource):
-    def get(self, database_name, extension):
-        '''Fetches distant file and parses it according to its extension.'''
+    @staticmethod
+    def get(database_name, extension):
+        """Fetches distant file and parses it according to its extension."""
 
         content = requests.get('{}/{}.{}'.format(
             SCHEMA_URL,
@@ -57,30 +48,18 @@ class Schema(Resource):
             extension
         )).content.decode(ENCODING)
 
-        if extension == 'json':
-            # return jsonify(json.loads(content))
-            return jsonify(json.loads(content))
-        elif extension == 'yml':
-            return jsonify(yaml.load(content))
-
-        return jsonify({
-            'message': 'Unknown extension.'
-        })
+        return file_response(content, extension)
 
 
 class Store(Resource):
-    def get(self, resource_name):
+    @staticmethod
+    def get(resource_name, extension):
+        """Fetches distant file from Store and parses it according to its extension."""
+
         content = requests.get('{}/{}.{}'.format(
             STORE_URL,
             resource_name,
             extension
         )).content.decode(ENCODING)
 
-        if extension == 'json':
-            return jsonify(json.loads(content))
-        elif extension == 'yml':
-            return jsonify(yaml.load(content))
-
-        return jsonify({
-            'message': 'Extension not found.'
-        })
+        return file_response(content, extension)

@@ -1,6 +1,5 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restful import Api
-import json
 
 from api.resources import Mapping, Schema, Schemas, Store
 
