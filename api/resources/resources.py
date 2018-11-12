@@ -5,24 +5,58 @@ from api.common.utils import file_response
 
 
 ENCODING = 'utf-8'
-MAPPING_URL = 'http://127.0.0.1:8421'
 SCHEMA_URL = 'http://127.0.0.1:8422'
 STORE_URL = 'http://127.0.0.1:8423'
 
 
-class Mapping(Resource):
+class FhirDatatypes(Resource):
     @staticmethod
-    def get(database_name, resource_name, extension):
-        """Fetches distant file from Mapping and parses it according to its extension."""
+    def get():
+        """Returns CSV list of available database schemas."""
 
-        content = requests.get('{}/{}/{}.{}'.format(
-            MAPPING_URL,
-            database_name,
-            resource_name,
-            extension
+        content = requests.get('{}/datatypes_list.json'.format(
+            STORE_URL
         )).content.decode(ENCODING)
 
-        return file_response(content, extension)
+        return file_response(content, 'json')
+
+
+class FhirDatatype(Resource):
+    @staticmethod
+    def get(resource_name):
+        """Returns CSV list of available database schemas."""
+
+        content = requests.get('{}/datatypes/{}.json'.format(
+            STORE_URL,
+            resource_name
+        )).content.decode(ENCODING)
+
+        return file_response(content, 'json')
+
+
+class FhirResources(Resource):
+    @staticmethod
+    def get():
+        """Returns CSV list of available database schemas."""
+
+        content = requests.get('{}/resource_list.json'.format(
+            STORE_URL
+        )).content.decode(ENCODING)
+
+        return file_response(content, 'json')
+
+
+class FhirResource(Resource):
+    @staticmethod
+    def get(resource_name):
+        """Returns CSV list of available database schemas."""
+
+        content = requests.get('{}/fhirResouces/{}.json'.format(
+            STORE_URL,
+            resource_name
+        )).content.decode(ENCODING)
+
+        return file_response(content, 'json')
 
 
 class Schemas(Resource):

@@ -1,16 +1,18 @@
 from flask import Flask
 from flask_restful import Api
 
-from api.resources import Mapping, Schema, Schemas, Store
+from api.resources import FhirDatatype, FhirDatatypes, FhirResource, FhirResources, Schema, Schemas
 
 
 app = Flask(__name__)
 api = Api(app)
 
-api.add_resource(Mapping, '/mapping/<database_name>/<resource_name>/<extension>')
+api.add_resource(FhirDatatype, '/fhir_datatype/<resource_name>')
+api.add_resource(FhirDatatypes, '/fhir_datatypes')
+api.add_resource(FhirResource, '/fhir_resource/<resource_name>')
+api.add_resource(FhirResources, '/fhir_resources')
 api.add_resource(Schema, '/schema/<database_name>/<extension>')
 api.add_resource(Schemas, '/schemas')
-api.add_resource(Store, '/store/<resource_name>')
 
 
 if __name__ == '__main__':
