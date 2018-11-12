@@ -17,7 +17,7 @@ def fhir_resource_path(fhir_resource, parent_folder):
     pattern = r'.*/{}(?:\.yml|\.json)?'.format(fhir_resource)
     matching_files = [
         file
-        for file in glob.glob(f'../{parent_folder}/**', recursive=True)
+        for file in glob.glob('../{parent_folder}/**', recursive=True)
         if re.match(pattern, file, flags=re.IGNORECASE)
     ]
     if not matching_files:
