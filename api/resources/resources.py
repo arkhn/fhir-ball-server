@@ -51,7 +51,7 @@ class FhirResource(Resource):
     def get(resource_name):
         """Returns CSV list of available database schemas."""
 
-        content = requests.get('{}/fhirResouces/{}.json'.format(
+        content = requests.get('{}/fhirResources/{}.json'.format(
             STORE_URL,
             resource_name
         )).content.decode(ENCODING)
